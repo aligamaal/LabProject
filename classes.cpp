@@ -17,15 +17,19 @@ class Supply : public Item {
 
 // User classes
 
-class Admin {         // Add/remove items, manage users, view all reports, system backup.
+class User {
+                // Login/Logout operations, password management, profile management, system interaction
+};
+
+class Admin : public User {         // Add/remove items, manage users, view all reports, system backup.
                                             
 };
 
-class Manager {                // add/update items, generate reports, monitor stock levels, approve orders
+class Manager : public User {                // add/update items, generate reports, monitor stock levels, approve orders
     
 };
 
-class Employee {
+class Employee : public User {
                                         // view items, update quanities, search inventory, generate basic reports.
 };
 
