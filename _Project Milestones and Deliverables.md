@@ -42,5 +42,5 @@
 
 | List Name  | Selected DS  | Reasons for selecting this DS |
 | :---- | :---- | :---- |
-| **InventorySystem** | **Stack**  | **Inventory system is managed using a LIFO system (last in first out) which is represented by the stack.** |
+| **InventorySystem** | **Maps**  | **We need to use Maps as the inventory system cannot have duplicates for the same item and it will be in pairs to be able to save the name/code of the product paired with it's stock** |
 
