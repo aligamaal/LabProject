@@ -4,6 +4,9 @@
 #include "loginwindow.h"
 #include <QMessageBox>
 #include "managerwindow.h"
+#include <QFile>        // For file operations
+#include <QDataStream>  // For binary data handling
+#include <QDir>
 
 AdminWindow::AdminWindow(QWidget *parent)
     : QDialog(parent)
@@ -11,6 +14,14 @@ AdminWindow::AdminWindow(QWidget *parent)
     ,m_managerWindow(nullptr)
 {
     ui->setupUi(this);
+    QFile userFile(USER_FILE);
+    if (userFile.exists()) {
+        loadUsersFromFile();
+    } else {
+        // Create default admin
+        usersMap["admin"] = new Admin("admin", "adminpass");
+        saveUsersToFile(); // Save immediately
+    }
 }
 
 AdminWindow::~AdminWindow()
@@ -41,6 +52,7 @@ void AdminWindow::on_pushButtonAddUser_clicked()
     else if (role == "Manager") usersMap[uname] = new Manager(uname, pass);
     else if (role == "Staff") usersMap[uname] = new Staff(uname, pass);
 
+    saveUsersToFile();
     QMessageBox::information(this, "Success", "User added successfully.");
 }
 
@@ -82,7 +94,7 @@ void AdminWindow::on_pushButtonRemoveUser_clicked()
 
     delete it->second;
     usersMap.erase(it);
-
+    saveUsersToFile();
     QMessageBox::information(this, "Success", "User removed successfully.");
     ui->lineEdituser->clear();
 }
@@ -98,4 +110,49 @@ void AdminWindow::on_pushButton_clicked()
     m_managerWindow->show();
     this->hide();
 }
+
+void AdminWindow::loadUsersFromFile()
+{
+    QFile file(USER_FILE);
+    if (file.open(QIODevice::ReadOnly)) {
+        QDataStream in(&file);
+        usersMap.clear(); // Clear existing users
+
+        int userCount;
+        in >> userCount;
+
+        for (int i = 0; i < userCount; i++) {
+            QString username, password, role;
+            in >> username >> password >> role;
+
+            // Reconstruct users from file data
+            if (role == "Admin") {
+                usersMap[username] = new Admin(username, password);
+            } else if (role == "Manager") {
+                usersMap[username] = new Manager(username, password);
+            } else if (role == "Staff") {
+                usersMap[username] = new Staff(username, password);
+            }
+        }
+        file.close();
+    }
+}
+
+void AdminWindow::saveUsersToFile()
+{
+    QFile file(USER_FILE);
+    if (file.open(QIODevice::WriteOnly)) {
+        QDataStream out(&file);
+        out << usersMap.size(); // Save total count first
+
+        // Save all users from the map
+        for (const auto& [username, user] : usersMap) {
+            out << username
+                << user->getPassword()
+                << user->getRole();
+        }
+        file.close();
+    }
+}
+
 

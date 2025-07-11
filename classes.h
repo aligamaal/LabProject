@@ -1,6 +1,6 @@
 #ifndef CLASSES_H
 #define CLASSES_H
-
+#include <cstddef>
 #include <QString>
 #include <iostream>
 #include "classes.h"
