@@ -15,7 +15,7 @@ SOURCES += \
     main.cpp \
     loginwindow.cpp \
     managerwindow.cpp \
-    staffwindow.cpp
+    staffwindow.cpp \
 
 HEADERS += \
     adminwindow.h \
@@ -23,13 +23,13 @@ HEADERS += \
     globals.h \
     loginwindow.h \
     managerwindow.h \
-    staffwindow.h
+    staffwindow.h \
 
 FORMS += \
     adminwindow.ui \
     loginwindow.ui \
     managerwindow.ui \
-    staffwindow.ui
+    staffwindow.ui \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
