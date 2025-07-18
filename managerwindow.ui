@@ -29,7 +29,7 @@
   <widget class="QPushButton" name="pushButtonAdditem">
    <property name="geometry">
     <rect>
-     <x>180</x>
+     <x>140</x>
      <y>250</y>
      <width>93</width>
      <height>29</height>
@@ -42,7 +42,7 @@
   <widget class="QPushButton" name="pushButtonViewinv">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>270</x>
      <y>250</y>
      <width>121</width>
      <height>31</height>
@@ -55,7 +55,7 @@
   <widget class="QPushButton" name="pushButtonlogout">
    <property name="geometry">
     <rect>
-     <x>660</x>
+     <x>690</x>
      <y>250</y>
      <width>93</width>
      <height>29</height>
@@ -65,77 +65,11 @@
     <string>Logout</string>
    </property>
   </widget>
-  <widget class="QListWidget" name="listWidgetInv">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>310</y>
-     <width>601</width>
-     <height>231</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>130</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Item Type:</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBoxItemType">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>130</y>
-     <width>101</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>Product</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Supply</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>190</y>
-     <width>63</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Brand:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEditBrand">
-   <property name="geometry">
-    <rect>
-     <x>110</x>
-     <y>190</y>
-     <width>113</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>190</y>
+     <x>260</x>
+     <y>80</y>
      <width>71</width>
      <height>21</height>
     </rect>
@@ -144,31 +78,24 @@
     <string>Category:</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEditCategory">
+  <widget class="QLineEdit" name="lineEditsup">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>190</y>
+     <x>460</x>
+     <y>150</y>
      <width>113</width>
      <height>26</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEditsup">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>130</y>
-     <width>113</width>
-     <height>26</height>
-    </rect>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
   </widget>
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>130</y>
+     <x>390</x>
+     <y>150</y>
      <width>81</width>
      <height>21</height>
     </rect>
@@ -177,46 +104,10 @@
     <string>Supplier:</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBoxConsumable">
-   <property name="geometry">
-    <rect>
-     <x>500</x>
-     <y>150</y>
-     <width>131</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Consumable?</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelItemID">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>130</y>
-     <width>63</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>ItemID:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEditItemID">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>130</y>
-     <width>113</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="lineEditName">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>110</x>
      <y>80</y>
      <width>113</width>
      <height>26</height>
@@ -236,23 +127,10 @@
     <string>Name:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLineEdit" name="lineEditCategory">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>80</y>
-     <width>101</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Description:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEditDesc">
-   <property name="geometry">
-    <rect>
-     <x>370</x>
+     <x>320</x>
      <y>80</y>
      <width>113</width>
      <height>26</height>
@@ -262,7 +140,7 @@
   <widget class="QSpinBox" name="spinBoxQuantity">
    <property name="geometry">
     <rect>
-     <x>580</x>
+     <x>520</x>
      <y>80</y>
      <width>61</width>
      <height>31</height>
@@ -272,7 +150,7 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>490</x>
+     <x>460</x>
      <y>80</y>
      <width>63</width>
      <height>20</height>
@@ -285,7 +163,7 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>620</x>
      <y>80</y>
      <width>63</width>
      <height>20</height>
@@ -298,8 +176,8 @@
   <widget class="QDoubleSpinBox" name="doubleSpinBoxPrice">
    <property name="geometry">
     <rect>
-     <x>741</x>
-     <y>75</y>
+     <x>670</x>
+     <y>80</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -308,7 +186,7 @@
   <widget class="QPushButton" name="pushButtonReport">
    <property name="geometry">
     <rect>
-     <x>490</x>
+     <x>550</x>
      <y>250</y>
      <width>121</width>
      <height>31</height>
@@ -316,6 +194,29 @@
    </property>
    <property name="text">
     <string>Generate Report</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>301</y>
+     <width>591</width>
+     <height>251</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonSearch">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>250</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Search</string>
    </property>
   </widget>
  </widget>

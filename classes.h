@@ -1,16 +1,17 @@
 #ifndef CLASSES_H
 #define CLASSES_H
-#include <cstddef>
+
 #include <QString>
-#include <iostream>
-#include "classes.h"
+#include <vector>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QBrush>
+#include <QColor>
+#include <QAbstractItemView>
 
-// Forward declaration of QMessageBox in case needed elsewhere
-class QMessageBox;
+// ==================== USER CLASSES ====================
 
-// -------------------------
-// Abstract Base Class: User
-// -------------------------
+// Base User class
 class User {
 protected:
     QString username;
@@ -19,116 +20,86 @@ protected:
 
 public:
     User(const QString& uname, const QString& pass, const QString& r);
+    virtual ~User();
 
+    // Login verification
     bool login(const QString& uname, const QString& pass);
 
+    // Getters
     QString getUsername() const;
     QString getPassword() const;
     QString getRole() const;
 
+    // Setters
     void setPassword(const QString& newPass);
 
-    virtual void displayMenu() const = 0; // Pure virtual
-    virtual ~User();
+    // Virtual methods
+    virtual void displayMenu() const = 0;  // Pure virtual
 };
 
-// -----------------
-// Admin Class
-// -----------------
+// Admin class - Full system access, user management
 class Admin : public User {
 public:
     Admin(const QString& uname, const QString& pass);
     void displayMenu() const override;
 };
 
-// -----------------
-// Manager Class
-// -----------------
+// Manager class - Inventory management, reports, pricing
 class Manager : public User {
 public:
     Manager(const QString& uname, const QString& pass);
     void displayMenu() const override;
 };
 
-// -----------------
-// Staff Class
-// -----------------
+// Staff class - Basic inventory operations
 class Staff : public User {
 public:
     Staff(const QString& uname, const QString& pass);
     void displayMenu() const override;
 };
 
-// Add after the Staff class
-// -------------------------
-// Abstract Base Class: Item
-// -------------------------
+// Role constants
+const QString ADMIN = "Admin";
+const QString MANAGER = "Manager";
+const QString STAFF = "Staff";
+
+// ==================== ITEM CLASSES ====================
+
+// Base Item class
 class Item {
-protected:
-    QString itemID;
+private:
     QString name;
-    QString description;
     int quantity;
     double price;
-    int threshold;
+    int lowStockThreshold;
+    QString category;
+    QString supplier;    // Add threshold for low stock warning
 
 public:
-    Item(const QString& id, const QString& n, const QString& desc, int qty, double pr);
-    virtual ~Item() = default;
-
-    // Existing methods...
-    virtual QString getType() const = 0;
-    QString getItemID() const;
+    Item(const QString& n, int qty, double pr,const QString& category_ , const QString& supplier_);
+    ~Item();
+    void display() const;
+    static void populateTable(QTableWidget* table, const std::vector<Item*>& itemList);
+    // Getters
     QString getName() const;
-    QString getDescription() const;
     int getQuantity() const;
     double getPrice() const;
-    int getThreshold() const;
+    int getLowStockThreshold() const;
+    QString getCategory() const;
+    QString getSupplier() const;
 
+
+
+    // Setters
+    void setName(QString n);
+    void setCategory(QString category_);
     void setQuantity(int qty);
     void setPrice(double pr);
-    void setThreshold(int thr) { threshold = thr; }
-    // Add low stock detection
-    bool isLowStock() const { return quantity < threshold; }
+    void setLowStockThreshold(int threshold);
+    void setSupplier(QString supplier_);
 
-    virtual QString display() const = 0;
+    // Stock management
+    bool isLowStock() const;
 };
-
-// -----------------
-// Product Class
-// -----------------
-class Product : public Item {
-    QString brand;
-    QString category;
-
-public:
-    Product(const QString& id, const QString& n, const QString& desc,
-            int qty, double pr, const QString& br, const QString& cat);
-
-    QString getType() const override;
-    QString getBrand() const { return brand; }
-    QString getCategory() const { return category; }
-
-    QString display() const override;
-};
-
-// -----------------
-// Supply Class
-// -----------------
-class Supply : public Item {
-    QString supplier;
-    bool consumable;
-
-public:
-    Supply(const QString& id, const QString& n, const QString& desc,
-           int qty, double pr, const QString& sup, bool cons);
-
-    QString getType() const override;
-    QString getSupplier() const { return supplier; }
-    bool isConsumable() const { return consumable; }
-
-    QString display() const override;
-};
-
 
 #endif // CLASSES_H

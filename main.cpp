@@ -1,12 +1,11 @@
 #include "loginwindow.h"
-#include "globals.h"
 #include <QApplication>
 
+// main.cpp
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    usersMap["admin"]=new Admin("admin","adminpass");
-    LoginWindow w;
+    LoginWindow w;  // Remove manual usersMap initialization
     w.show();
     return a.exec();
 }

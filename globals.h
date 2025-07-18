@@ -6,6 +6,7 @@
 #include <QString>
 #include "classes.h"
 
+
 extern std::map<QString, User*> usersMap;
 extern std::vector<Item*> inventoryList;
 
