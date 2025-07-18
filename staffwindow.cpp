@@ -10,20 +10,18 @@
 StaffWindow::StaffWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::StaffWindow)
-    , loginWindowInstance(nullptr)  // Initialize to nullptr
+    , loginWindowInstance(nullptr)
 {
     ui->setupUi(this);
-    loadInventoryFromFile();  // Load inventory when window opens
+    loadInventoryFromFile();
 }
 
 void StaffWindow::setLoginWindow(LoginWindow* loginWindow)
 {
     loginWindowInstance = loginWindow;
 
-    // Update the welcome message when login window is set
     QString currentUser = getCurrentLoggedInUser();
     if (!currentUser.isEmpty()) {
-        // Assuming you have a label named "label" in your UI
         ui->label->setText(QString("Welcome %1!").arg(currentUser));
         qDebug() << "Welcome message set for staff:" << currentUser;
     } else {
@@ -33,7 +31,6 @@ void StaffWindow::setLoginWindow(LoginWindow* loginWindow)
 
 StaffWindow::~StaffWindow()
 {
-    // Clean up inventory items
     for (Item* item : inventoryList) {
         delete item;
     }
@@ -43,18 +40,15 @@ StaffWindow::~StaffWindow()
 
 QString StaffWindow::getCurrentLoggedInUser()
 {
-    // Get current user from LoginWindow instance
     if (loginWindowInstance) {
         return loginWindowInstance->getCurrentUser();
     }
 
-    // Fallback if loginWindowInstance is null
     return "Staff User";
 }
 
 void StaffWindow::loadInventoryFromFile()
 {
-    // Clear existing inventory
     for (Item* item : inventoryList) {
         delete item;
     }
@@ -69,7 +63,6 @@ void StaffWindow::loadInventoryFromFile()
     std::string line;
     int itemCount = 0;
 
-    // Read item count
     if (std::getline(file, line)) {
         try {
             itemCount = std::stoi(line);
@@ -81,19 +74,17 @@ void StaffWindow::loadInventoryFromFile()
         }
     }
 
-    // Skip header line
+
     if (!std::getline(file, line)) {
         qDebug() << "No header line found";
         file.close();
         return;
     }
 
-    // Read inventory items
     for (int i = 0; i < itemCount && std::getline(file, line); i++) {
         std::istringstream iss(line);
         std::string name, category, supplier, qtyStr, priceStr, thresholdStr;
 
-        // Parse: Name|Category|Supplier|Quantity|Price|Threshold
         if (std::getline(iss, name, '|') &&
             std::getline(iss, category, '|') &&
             std::getline(iss, supplier, '|') &&

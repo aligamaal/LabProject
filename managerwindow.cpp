@@ -16,7 +16,7 @@
 ManagerWindow::ManagerWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::ManagerWindow)
-    , loginWindowInstance(nullptr)  // Initialize to nullptr
+    , loginWindowInstance(nullptr)
 {
     ui->setupUi(this);
     loadInventoryFromFile();
@@ -25,7 +25,6 @@ void ManagerWindow::setLoginWindow(LoginWindow* loginWindow)
 {
     loginWindowInstance = loginWindow;
 
-    // Update the welcome message when login window is set
     QString currentUser = getCurrentLoggedInUser();
     if (!currentUser.isEmpty()) {
         ui->label->setText(QString("Welcome %1!").arg(currentUser));
@@ -36,7 +35,6 @@ void ManagerWindow::setLoginWindow(LoginWindow* loginWindow)
 }
 ManagerWindow::~ManagerWindow()
 {
-    // Clean up inventory items
     for (Item* item : inventoryList) {
         delete item;
     }
@@ -46,7 +44,6 @@ ManagerWindow::~ManagerWindow()
 
 void ManagerWindow::loadInventoryFromFile()
 {
-    // Clear existing inventory
     for (Item* item : inventoryList) {
         delete item;
     }
@@ -61,7 +58,6 @@ void ManagerWindow::loadInventoryFromFile()
     std::string line;
     int itemCount = 0;
 
-    // Read item count
     if (std::getline(file, line)) {
         try {
             itemCount = std::stoi(line);
@@ -73,7 +69,6 @@ void ManagerWindow::loadInventoryFromFile()
         }
     }
 
-    // Skip header line
     if (!std::getline(file, line)) {
         qDebug() << "No header line found";
         file.close();
@@ -85,7 +80,6 @@ void ManagerWindow::loadInventoryFromFile()
         std::istringstream iss(line);
         std::string name, category, supplier, qtyStr, priceStr, thresholdStr;
 
-        // Parse: Name|Category|Supplier|Quantity|Price|Threshold
         if (std::getline(iss, name, '|') &&
             std::getline(iss, category, '|') &&
             std::getline(iss, supplier, '|') &&
@@ -123,13 +117,10 @@ void ManagerWindow::saveInventoryToFile()
         return;
     }
 
-    // Write item count
     file << inventoryList.size() << std::endl;
 
-    // Write header
     file << "Name|Category|Supplier|Quantity|Price|Threshold" << std::endl;
 
-    // Write inventory items
     for (Item* item : inventoryList) {
         file << item->getName().toStdString() << "|"
              << item->getCategory().toStdString() << "|"
@@ -145,7 +136,7 @@ void ManagerWindow::saveInventoryToFile()
 
 void ManagerWindow::on_pushButtonlogout_clicked()
 {
-    saveInventoryToFile();  // Save before logout
+    saveInventoryToFile();
     LoginWindow *login = new LoginWindow();
     login->show();
     this->close();
@@ -164,7 +155,6 @@ void ManagerWindow::on_pushButtonAdditem_clicked()
     QString category = ui->lineEditCategory->text().trimmed();
     QString supply = ui->lineEditsup->text().trimmed();
 
-    // Enhanced validation with specific error messages
     if (name.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Item name cannot be empty.");
         ui->lineEditName->setFocus();
@@ -183,7 +173,6 @@ void ManagerWindow::on_pushButtonAdditem_clicked()
         return;
     }
 
-    // Check for negative or zero quantity
     if (qty <= 0) {
         QMessageBox::warning(this, "Input Error", "Quantity must be greater than 0.");
         ui->spinBoxQuantity->setFocus();
@@ -191,7 +180,6 @@ void ManagerWindow::on_pushButtonAdditem_clicked()
         return;
     }
 
-    // Check for negative or zero price
     if (price <= 0.0) {
         QMessageBox::warning(this, "Input Error", "Price must be greater than 0.00.");
         ui->doubleSpinBoxPrice->setFocus();
@@ -199,7 +187,6 @@ void ManagerWindow::on_pushButtonAdditem_clicked()
         return;
     }
 
-    // Check for reasonable maximum values to prevent overflow
     if (qty > 999999) {
         QMessageBox::warning(this, "Input Error", "Quantity cannot exceed 999,999.");
         ui->spinBoxQuantity->setFocus();
@@ -212,7 +199,6 @@ void ManagerWindow::on_pushButtonAdditem_clicked()
         return;
     }
 
-    // Enhanced duplicate check - check both name and category combination
     for (Item* existingItem : inventoryList) {
         if (existingItem->getName().toLower() == name.toLower() &&
             existingItem->getCategory().toLower() == category.toLower()) {
@@ -226,7 +212,6 @@ void ManagerWindow::on_pushButtonAdditem_clicked()
         }
     }
 
-    // Validate name contains only appropriate characters (letters, numbers, spaces, common symbols)
     QRegularExpression nameRegex("^[a-zA-Z0-9\\s\\-_().&]+$");
     if (!nameRegex.match(name).hasMatch()) {
         QMessageBox::warning(this, "Input Error",
@@ -236,7 +221,6 @@ void ManagerWindow::on_pushButtonAdditem_clicked()
         return;
     }
 
-    // Validate category contains only appropriate characters
     if (!nameRegex.match(category).hasMatch()) {
         QMessageBox::warning(this, "Input Error",
                              "Category contains invalid characters.\n"
@@ -245,7 +229,6 @@ void ManagerWindow::on_pushButtonAdditem_clicked()
         return;
     }
 
-    // Validate supplier contains only appropriate characters
     if (!nameRegex.match(supply).hasMatch()) {
         QMessageBox::warning(this, "Input Error",
                              "Supplier name contains invalid characters.\n"
@@ -255,27 +238,22 @@ void ManagerWindow::on_pushButtonAdditem_clicked()
     }
 
     try {
-        // Create and add new item
         Item* item = new Item(name, qty, price, category, supply);
         inventoryList.push_back(item);
 
-        // Save to file immediately
         saveInventoryToFile();
 
         QMessageBox::information(this, "Success",
                                  QString("Item '%1' has been successfully added to inventory.").arg(name));
 
-        // Clear fields after successful addition
         ui->lineEditName->clear();
         ui->spinBoxQuantity->setValue(0);
         ui->doubleSpinBoxPrice->setValue(0.0);
         ui->lineEditCategory->clear();
         ui->lineEditsup->clear();
 
-        // Set focus back to name field for next entry
         ui->lineEditName->setFocus();
 
-        // Refresh the table if it's currently displayed
         if (ui->tableWidget->rowCount() > 0) {
             Item::populateTable(ui->tableWidget, inventoryList);
         }
@@ -304,7 +282,6 @@ void ManagerWindow::on_pushButtonReport_clicked()
         }
     }
 
-    // 2. Prepare report text
     QString reportText = "INVENTORY REPORT\n";
     reportText += QString("Total Item Types: %1\n").arg(totalItemTypes);
     reportText += QString("Low Stock Items: %1\n\n").arg(lowStockCount);
@@ -326,10 +303,8 @@ void ManagerWindow::on_pushButtonReport_clicked()
         reportText += "No items are currently low on stock.\n";
     }
 
-    // 3. Show the report
     QMessageBox::information(this, "Inventory Report", reportText);
 
-    // 4. Offer to export
     QMessageBox::StandardButton reply = QMessageBox::question(
         this,
         "Export Report",
@@ -344,7 +319,6 @@ void ManagerWindow::on_pushButtonReport_clicked()
 
 void ManagerWindow::on_pushButtonSearch_clicked()
 {
-    // Create a simple input dialog for search
     bool ok;
     QStringList searchOptions;
     searchOptions << "Name" << "Category" << "Supplier";
@@ -354,7 +328,7 @@ void ManagerWindow::on_pushButtonSearch_clicked()
                                                searchOptions, 0, false, &ok);
 
     if (!ok || searchType.isEmpty()) {
-        return; // User cancelled
+        return;
     }
 
     QString searchText = QInputDialog::getText(this, "Search Items",
@@ -362,13 +336,11 @@ void ManagerWindow::on_pushButtonSearch_clicked()
                                                QLineEdit::Normal, "", &ok);
 
     if (!ok || searchText.trimmed().isEmpty()) {
-        return; // User cancelled or entered empty text
+        return;
     }
 
-    // Perform search
     std::vector<Item*> results = searchItems(searchText.trimmed(), searchType);
 
-    // Display results
     if (results.empty()) {
         QMessageBox::information(this, "Search Results",
                                  QString("No items found matching '%1' in %2.")
@@ -407,7 +379,6 @@ std::vector<Item*> ManagerWindow::searchItems(const QString &searchText, const Q
 
 void ManagerWindow::displaySearchResults(const std::vector<Item*> &results)
 {
-    // Use the existing table to display search results
     Item::populateTable(ui->tableWidget, results);
 }
 
@@ -474,11 +445,9 @@ void ManagerWindow::exportAsCsv(const std::string &filePath)
 }
 QString ManagerWindow::getCurrentLoggedInUser()
 {
-    // Get current user from LoginWindow instance
     if (loginWindowInstance) {
         return loginWindowInstance->getCurrentUser();
     }
 
-    // Fallback if loginWindowInstance is null
     return "Manager User";
 }

@@ -28,16 +28,14 @@ private slots:
     void on_pushButtonViewinv_clicked();
     void on_pushButtonAdditem_clicked();
     void on_pushButtonReport_clicked();
-    void on_pushButtonSearch_clicked();  // ADD THIS LINE
+    void on_pushButtonSearch_clicked();
 
 private:
     Ui::ManagerWindow *ui;
     int currentEditIndex = -1;
 
-    // ADD THESE LINES
     LoginWindow* loginWindowInstance = nullptr;
 
-    // ADD THIS LINE - this was missing!
     std::vector<Item*> inventoryList;
 
     void exportReport(const QString &reportText);
@@ -45,7 +43,6 @@ private:
     void saveInventoryToFile();
     void loadInventoryFromFile();
 
-    // ADD THESE SEARCH HELPER FUNCTIONS
     std::vector<Item*> searchItems(const QString &searchText, const QString &searchType);
     void displaySearchResults(const std::vector<Item*> &results);
 

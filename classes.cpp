@@ -83,57 +83,45 @@ void Item::display() const {
 }
 void Item::populateTable(QTableWidget* table, const std::vector<Item*>& itemList)
 {
-    // Set up table columns
     table->setColumnCount(6);
 
-    // Set column headers
     QStringList headers;
     headers << "Name" << "Category" << "Supplier" << "Quantity" << "Price" << "Stock Status";
     table->setHorizontalHeaderLabels(headers);
 
-    // Set number of rows
     table->setRowCount(itemList.size());
 
-    // Populate the table
     for (int row = 0; row < itemList.size(); ++row) {
         Item* item = itemList[row];
 
-        // Column 0: Name
         table->setItem(row, 0, new QTableWidgetItem(item->getName()));
 
-        // Column 1: Category
         table->setItem(row, 1, new QTableWidgetItem(item->getCategory()));
 
-        // Column 2: Supplier
         table->setItem(row, 2, new QTableWidgetItem(item->getSupplier()));
 
-        // Column 3: Quantity
         table->setItem(row, 3, new QTableWidgetItem(QString::number(item->getQuantity())));
 
-        // Column 4: Price
         table->setItem(row, 4, new QTableWidgetItem("$" + QString::number(item->getPrice(), 'f', 2)));
 
-        // Column 5: Stock Status
         QString stockStatus = item->isLowStock() ? "LOW STOCK" : "Normal";
         QTableWidgetItem* statusItem = new QTableWidgetItem(stockStatus);
 
-        // Color code the stock status
         if (item->isLowStock()) {
-            statusItem->setBackground(QBrush(QColor(255, 200, 200))); // Light red background
-            statusItem->setForeground(QBrush(QColor(150, 0, 0)));     // Dark red text
+            statusItem->setBackground(QBrush(QColor(255, 200, 200)));
+            statusItem->setForeground(QBrush(QColor(150, 0, 0)));
         } else {
-            statusItem->setBackground(QBrush(QColor(200, 255, 200))); // Light green background
-            statusItem->setForeground(QBrush(QColor(0, 100, 0)));     // Dark green text
+            statusItem->setBackground(QBrush(QColor(200, 255, 200)));
+            statusItem->setForeground(QBrush(QColor(0, 100, 0)));
         }
 
         table->setItem(row, 5, statusItem);
     }
 
-    // Make the table look better
-    table->resizeColumnsToContents();  // Auto-size columns
-    table->setAlternatingRowColors(true);  // Alternate row colors
-    table->setSelectionBehavior(QAbstractItemView::SelectRows);  // Select entire rows
-    table->setSortingEnabled(true);  // Allow column sorting
+    table->resizeColumnsToContents();
+    table->setAlternatingRowColors(true);
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table->setSortingEnabled(true);
 }
 QString Item::getName() const {
     return name;

@@ -8,15 +8,15 @@
 #include <QDir>
 
 AdminWindow::AdminWindow(LoginWindow* loginWindow, QWidget *parent)
-    : QMainWindow(parent)  // Match the base class type
+    : QMainWindow(parent)
     , ui(new Ui::AdminWindow)
     , m_managerWindow(nullptr)
-    , loginWindowInstance(loginWindow)  // Initialize member variable
+    , loginWindowInstance(loginWindow)
 {
     ui->setupUi(this);
     qDebug() << "AdminWindow constructor called";
 
-    // Get the current logged-in username and display it
+
     QString currentUser = getCurrentLoggedInUser();
     if (!currentUser.isEmpty()) {
         ui->labelAdmin->setText(QString("Welcome %1!").arg(currentUser));
@@ -25,8 +25,6 @@ AdminWindow::AdminWindow(LoginWindow* loginWindow, QWidget *parent)
         ui->labelAdmin->setText("Welcome Admin!");
         qDebug() << "No current user found, using default welcome message";
     }
-
-    // Rest of your constructor code
 }
 
 AdminWindow::~AdminWindow()
@@ -36,17 +34,16 @@ AdminWindow::~AdminWindow()
 
 void AdminWindow::on_pushButtonLogout_clicked()
 {
-    // Show the existing LoginWindow instead of creating a new one
     loginWindowInstance->show();
     this->close();
 }
+
 void AdminWindow::on_pushButtonAddUser_clicked()
 {
     QString uname = ui->lineEdituser->text().trimmed();
     QString pass = ui->lineEditpassword->text();
     QString role = ui->comboBoxRole->currentText();
 
-    // Enhanced username validation
     if (uname.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Username cannot be empty.");
         ui->lineEdituser->setFocus();
@@ -78,7 +75,6 @@ void AdminWindow::on_pushButtonAddUser_clicked()
         return;
     }
 
-    // Enhanced password validation
     if (pass.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Password cannot be empty.");
         ui->lineEditpassword->setFocus();
@@ -94,7 +90,6 @@ void AdminWindow::on_pushButtonAddUser_clicked()
         return;
     }
 
-    // Check each character individually for better error reporting
     for (int i = 0; i < pass.length(); i++) {
         QChar c = pass.at(i);
         if (!c.isLetterOrNumber()) {
@@ -109,7 +104,6 @@ void AdminWindow::on_pushButtonAddUser_clicked()
         }
     }
 
-    // Validate role selection
     if (role.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please select a role for the user.");
         ui->comboBoxRole->setFocus();
@@ -117,18 +111,15 @@ void AdminWindow::on_pushButtonAddUser_clicked()
     }
 
     try {
-        // Use LoginWindow's method to add user
         if (loginWindowInstance->addUser(uname, pass, role)) {
             QMessageBox::information(this, "Success",
                                      QString("User '%1' with role '%2' has been successfully added.")
                                          .arg(uname).arg(role));
 
-            // Clear fields after successful addition
             ui->lineEdituser->clear();
             ui->lineEditpassword->clear();
-            ui->comboBoxRole->setCurrentIndex(0); // Reset to first role option
+            ui->comboBoxRole->setCurrentIndex(0);
 
-            // Set focus back to username field for next entry
             ui->lineEdituser->setFocus();
         } else {
             QMessageBox::warning(this, "Error",
@@ -152,7 +143,7 @@ void AdminWindow::on_pushButtonViewUsers_clicked()
 {
     ui->textEditUsers->clear();
 
-    // Get users from LoginWindow
+
     QString userList = loginWindowInstance->getUserList();
     ui->textEditUsers->setPlainText(userList);
 }
@@ -165,7 +156,6 @@ void AdminWindow::on_pushButtonRemoveUser_clicked()
         return;
     }
 
-    // Use LoginWindow's method to remove user
     if (loginWindowInstance->removeUser(uname)) {
         QMessageBox::information(this, "Success", "User removed successfully.");
         ui->lineEdituser->clear();
@@ -185,12 +175,10 @@ void AdminWindow::on_pushButton_clicked()
 
 QString AdminWindow::getCurrentLoggedInUser()
 {
-    // Get current user from LoginWindow instance
     if (loginWindowInstance) {
         return loginWindowInstance->getCurrentUser();
     }
 
-    // Fallback if loginWindowInstance is null
     return "Admin User";
 }
 

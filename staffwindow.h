@@ -2,8 +2,8 @@
 #define STAFFWINDOW_H
 
 #include <QDialog>
-#include "classes.h"  // Add this include
-#include <vector>     // Add this include
+#include "classes.h"
+#include <vector>
 
 // ADD FORWARD DECLARATION
 class LoginWindow;
@@ -18,7 +18,7 @@ class StaffWindow : public QDialog
 
 public:
     explicit StaffWindow(QWidget *parent = nullptr);
-    void setLoginWindow(LoginWindow* loginWindow);  // Add this method
+    void setLoginWindow(LoginWindow* loginWindow);
     ~StaffWindow();
 
 private slots:
@@ -28,11 +28,9 @@ private slots:
 private:
     Ui::StaffWindow *ui;
 
-    // ADD THESE MEMBER VARIABLES
     LoginWindow* loginWindowInstance = nullptr;
     std::vector<Item*> inventoryList;
 
-    // ADD THESE HELPER FUNCTIONS
     void loadInventoryFromFile();
     QString getCurrentLoggedInUser();
 };

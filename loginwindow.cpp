@@ -28,7 +28,6 @@ LoginWindow::LoginWindow(QWidget *parent)
 
 LoginWindow::~LoginWindow()
 {
-    // Clean up dynamically allocated User objects
     for (auto& pair : usersMap) {
         delete pair.second;
     }
@@ -44,20 +43,17 @@ LoginWindow::~LoginWindow()
 
 void LoginWindow::loadUsersFromFile()
 {
-    // Clear existing users first
     for (auto& pair : usersMap) {
         delete pair.second;
     }
     usersMap.clear();
 
-    // Try to open the file
-    ifstream file("user.txt");  // Make sure this matches your save function
+    ifstream file("user.txt");
 
     if (!file.is_open()) {
         qDebug() << "Users file not found at: user.txt. Creating default admin user.";
-        // Create a default admin user if no file exists
         usersMap["admin"] = new Admin("admin", "admin123");
-        saveUsersToFile();  // This will save the default admin
+        saveUsersToFile();
         qDebug() << "Default admin user created - Username: admin, Password: admin123";
         return;
     }
@@ -73,30 +69,26 @@ void LoginWindow::loadUsersFromFile()
         } catch (...) {
             qDebug() << "Error reading rows count, creating default admin";
             file.close();
-            // Create default admin on error
             usersMap["admin"] = new Admin("admin", "admin123");
             saveUsersToFile();
             return;
         }
     }
 
-    // Skip header line
     if (!getline(file, line)) {
         qDebug() << "No header line found";
         file.close();
         return;
     }
 
-    // Read user data
     int successfullyLoaded = 0;
     for (int i = 0; i < rowsCount && getline(file, line); i++) {
         istringstream iss(line);
         string username, password, role;
 
-        // Parse the line - note: no trailing '|' expected
         if (!getline(iss, username, '|') ||
             !getline(iss, password, '|') ||
-            !getline(iss, role)) {  // Changed: removed '|' from last field
+            !getline(iss, role)) {
             qDebug() << "Error parsing user data at line" << i + 3 << ": " << QString::fromStdString(line);
             continue;
         }
@@ -107,7 +99,6 @@ void LoginWindow::loadUsersFromFile()
 
         qDebug() << "Read data - Username:" << qUsername << "Password:" << qPassword << "Role:" << qRole;
 
-        // Create user based on role (case-insensitive comparison)
         if (qRole.toLower() == "admin") {
             usersMap[qUsername] = new Admin(qUsername, qPassword);
             successfullyLoaded++;
@@ -125,16 +116,13 @@ void LoginWindow::loadUsersFromFile()
     file.close();
     qDebug() << "Successfully loaded" << successfullyLoaded << "users out of" << rowsCount;
 
-    // NEW: Ensure default admin exists after loading
     ensureDefaultAdminExists();
 
-    // If default admin was added, save it to file
     if (usersMap.size() > successfullyLoaded) {
         qDebug() << "Default admin was added after loading. Saving to file.";
         saveUsersToFile();
     }
 
-    // Debug: Print all loaded users
     qDebug() << "Current users in system:";
     for (const auto& pair : usersMap) {
         qDebug() << "  Username:" << pair.first << "Role:" << pair.second->getRole();
@@ -162,7 +150,6 @@ bool LoginWindow::saveUsersToFile()
         return false;
     }
 
-    // Write Rows Count At the Top of the file
     int rowsCount = usersMap.size();
     file << rowsCount << endl;
 
@@ -171,7 +158,6 @@ bool LoginWindow::saveUsersToFile()
 
     for (const auto& pair : usersMap) {
         User* user = pair.second;
-        // Note: No trailing '|' after role
         file << user->getUsername().toStdString() << "|"
              << user->getPassword().toStdString() << "|"
              << user->getRole().toStdString() << endl;
@@ -190,13 +176,11 @@ void LoginWindow::on_Push_ButtonClear_clicked()
 }
 
 bool LoginWindow::addUser(const QString& username, const QString& password, const QString& role) {
-    // Validate username
     if (username.trimmed().isEmpty()) {
         qDebug() << "Username cannot be empty";
         return false;
     }
 
-    // Check username length
     if (username.length() < 3) {
         qDebug() << "Username must be at least 3 characters long";
         return false;
@@ -207,14 +191,12 @@ bool LoginWindow::addUser(const QString& username, const QString& password, cons
         return false;
     }
 
-    // Validate username characters (only alphanumeric and underscore)
     QRegularExpression usernameRegex("^[a-zA-Z0-9_]+$");
     if (!usernameRegex.match(username).hasMatch()) {
         qDebug() << "Username can only contain letters, numbers, and underscores";
         return false;
     }
 
-    // Check if user already exists (case-insensitive)
     for (const auto& pair : usersMap) {
         if (pair.first.toLower() == username.toLower()) {
             qDebug() << "Username already exists (case-insensitive check)";
@@ -222,13 +204,11 @@ bool LoginWindow::addUser(const QString& username, const QString& password, cons
         }
     }
 
-    // Validate password length (already checked in AdminWindow, but good to double-check)
     if (password.length() != 8) {
         qDebug() << "Password must be exactly 8 characters long";
         return false;
     }
 
-    // Validate password characters (only alphanumeric)
     for (int i = 0; i < password.length(); i++) {
         QChar c = password.at(i);
         if (!c.isLetterOrNumber()) {
@@ -237,7 +217,6 @@ bool LoginWindow::addUser(const QString& username, const QString& password, cons
         }
     }
 
-    // Validate role
     QString normalizedRole = role.toLower();
     if (normalizedRole != "admin" && normalizedRole != "manager" && normalizedRole != "staff") {
         qDebug() << "Invalid role:" << role;
@@ -245,7 +224,6 @@ bool LoginWindow::addUser(const QString& username, const QString& password, cons
     }
 
     try {
-        // Add user to map
         if (normalizedRole == "admin") {
             usersMap[username] = new Admin(username, password);
         } else if (normalizedRole == "manager") {
@@ -254,9 +232,7 @@ bool LoginWindow::addUser(const QString& username, const QString& password, cons
             usersMap[username] = new Staff(username, password);
         }
 
-        // Save immediately after adding
         if (!saveUsersToFile()) {
-            // If save failed, remove the user from memory
             delete usersMap[username];
             usersMap.erase(username);
             qDebug() << "Failed to save user to file, user not added";
@@ -279,7 +255,7 @@ bool LoginWindow::addUser(const QString& username, const QString& password, cons
 bool LoginWindow::removeUser(const QString& username) {
     auto it = usersMap.find(username);
     if (it == usersMap.end()) {
-        return false; // User not found
+        return false;
     }
 
     if (username.toLower() == "admin") {
@@ -287,7 +263,6 @@ bool LoginWindow::removeUser(const QString& username) {
         return false;
     }
 
-    // Don't allow removing the last admin
     if (it->second->getRole().toLower() == "admin") {
         int adminCount = 0;
         for (const auto& pair : usersMap) {
@@ -304,7 +279,6 @@ bool LoginWindow::removeUser(const QString& username) {
     delete it->second;
     usersMap.erase(it);
 
-    // Save immediately after removing
     saveUsersToFile();
     qDebug() << "User removed and saved:" << username;
     return true;
@@ -336,7 +310,7 @@ void LoginWindow::on_pushButtonLogin_clicked()
     if (it != usersMap.end() && it->second->getPassword() == password) {
         QString role = it->second->getRole().toLower();
         qDebug() << "Login successful! User role:" << role;
-        currentLoggedInUser = username;  // Set the current user FIRST
+        currentLoggedInUser = username;
 
         if (role == "admin") {
             if (!adminWindow) {
@@ -348,7 +322,7 @@ void LoginWindow::on_pushButtonLogin_clicked()
         else if (role == "staff") {
             if (!staffWindow) {
                 staffWindow = new StaffWindow(this);
-                staffWindow->setLoginWindow(this);  // ADD THIS LINE!
+                staffWindow->setLoginWindow(this);
             }
             staffWindow->show();
             this->hide();
@@ -356,13 +330,12 @@ void LoginWindow::on_pushButtonLogin_clicked()
         else if (role == "manager") {
             if (!managerWindow) {
                 managerWindow = new ManagerWindow(this);
-                managerWindow->setLoginWindow(this);  // ADD THIS LINE!
+                managerWindow->setLoginWindow(this);
             }
             managerWindow->show();
             this->hide();
         }
 
-        // Clear the input fields after successful login
         ui->lineEditUser->clear();
         ui->lineEditPassword->clear();
     } else {
@@ -370,7 +343,9 @@ void LoginWindow::on_pushButtonLogin_clicked()
         QMessageBox::warning(this, "Login Failed", "Invalid username or password");
     }
 }
+
 QString LoginWindow::getCurrentUser() const
 {
     return currentLoggedInUser;
 }
+

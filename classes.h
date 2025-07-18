@@ -33,32 +33,27 @@ public:
     // Setters
     void setPassword(const QString& newPass);
 
-    // Virtual methods
     virtual void displayMenu() const = 0;  // Pure virtual
 };
 
-// Admin class - Full system access, user management
 class Admin : public User {
 public:
     Admin(const QString& uname, const QString& pass);
     void displayMenu() const override;
 };
 
-// Manager class - Inventory management, reports, pricing
 class Manager : public User {
 public:
     Manager(const QString& uname, const QString& pass);
     void displayMenu() const override;
 };
 
-// Staff class - Basic inventory operations
 class Staff : public User {
 public:
     Staff(const QString& uname, const QString& pass);
     void displayMenu() const override;
 };
 
-// Role constants
 const QString ADMIN = "Admin";
 const QString MANAGER = "Manager";
 const QString STAFF = "Staff";
@@ -73,7 +68,7 @@ private:
     double price;
     int lowStockThreshold;
     QString category;
-    QString supplier;    // Add threshold for low stock warning
+    QString supplier;
 
 public:
     Item(const QString& n, int qty, double pr,const QString& category_ , const QString& supplier_);

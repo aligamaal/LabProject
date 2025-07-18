@@ -3,8 +3,8 @@
 #include "managerwindow.h"
 #include "loginwindow.h"
 #include <QDialog>
-#include <QFile>          // Add this
-#include <QDataStream>    // Add this
+#include <QFile>
+#include <QDataStream>
 #include <QIODevice>
 #include <QMainWindow>
 #include <QRegularExpression>
