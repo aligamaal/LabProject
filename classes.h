@@ -19,13 +19,19 @@ protected:
     QString role;
 
 public:
+
+
     User(const QString& uname, const QString& pass, const QString& r);
     virtual ~User();
 
     // Login verification
     bool login(const QString& uname, const QString& pass);
+<<<<<<< HEAD
 
     // Getters
+=======
+// getters and setters
+>>>>>>> 966a455586751fd469cb8ea97e80e7f8237c781e
     QString getUsername() const;
     QString getPassword() const;
     QString getRole() const;
@@ -76,11 +82,20 @@ private:
     QString supplier;    // Add threshold for low stock warning
 
 public:
+<<<<<<< HEAD
     Item(const QString& n, int qty, double pr,const QString& category_ , const QString& supplier_);
     ~Item();
     void display() const;
     static void populateTable(QTableWidget* table, const std::vector<Item*>& itemList);
     // Getters
+=======
+    Item(const QString& id, const QString& n, const QString& desc, int qty, double pr);
+    virtual ~Item() = default;
+
+    // getters and setters
+    virtual QString getType() const = 0;
+    QString getItemID() const;
+>>>>>>> 966a455586751fd469cb8ea97e80e7f8237c781e
     QString getName() const;
     int getQuantity() const;
     double getPrice() const;
@@ -102,4 +117,46 @@ public:
     bool isLowStock() const;
 };
 
+<<<<<<< HEAD
+=======
+// -----------------
+// Product Class
+// -----------------
+class Product : public Item {
+    QString brand;
+    QString category;
+
+public:
+    Product(const QString& id, const QString& n, const QString& desc,
+            int qty, double pr, const QString& br, const QString& cat);
+
+// getters and setters
+    QString getType() const override;
+    QString getBrand() const { return brand; }
+    QString getCategory() const { return category; }
+
+    QString display() const override;
+};
+
+// -----------------
+// Supply Class
+// -----------------
+class Supply : public Item {
+    QString supplier;
+    bool consumable;
+
+public:
+    Supply(const QString& id, const QString& n, const QString& desc,
+           int qty, double pr, const QString& sup, bool cons);
+
+//getters and setters
+    QString getType() const override;
+    QString getSupplier() const { return supplier; }
+    bool isConsumable() const { return consumable; }
+
+    QString display() const override;
+};
+
+
+>>>>>>> 966a455586751fd469cb8ea97e80e7f8237c781e
 #endif // CLASSES_H
