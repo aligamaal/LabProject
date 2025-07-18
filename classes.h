@@ -18,10 +18,12 @@ protected:
     QString role;
 
 public:
+
+
     User(const QString& uname, const QString& pass, const QString& r);
 
     bool login(const QString& uname, const QString& pass);
-
+// getters and setters
     QString getUsername() const;
     QString getPassword() const;
     QString getRole() const;
@@ -76,7 +78,7 @@ public:
     Item(const QString& id, const QString& n, const QString& desc, int qty, double pr);
     virtual ~Item() = default;
 
-    // Existing methods...
+    // getters and setters
     virtual QString getType() const = 0;
     QString getItemID() const;
     QString getName() const;
@@ -105,6 +107,7 @@ public:
     Product(const QString& id, const QString& n, const QString& desc,
             int qty, double pr, const QString& br, const QString& cat);
 
+// getters and setters
     QString getType() const override;
     QString getBrand() const { return brand; }
     QString getCategory() const { return category; }
@@ -123,6 +126,7 @@ public:
     Supply(const QString& id, const QString& n, const QString& desc,
            int qty, double pr, const QString& sup, bool cons);
 
+//getters and setters
     QString getType() const override;
     QString getSupplier() const { return supplier; }
     bool isConsumable() const { return consumable; }
